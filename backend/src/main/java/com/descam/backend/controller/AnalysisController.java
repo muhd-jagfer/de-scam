@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-public class HelloController
+public class AnalysisController
 {
     private final ScamDetectionService scamDetectionService;
 
-    public HelloController(ScamDetectionService scamDetectionService)
+    public AnalysisController(ScamDetectionService scamDetectionService)
     {
         this.scamDetectionService = scamDetectionService;
     }
