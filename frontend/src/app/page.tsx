@@ -123,15 +123,26 @@ export default function Home() {
                 <p className='font-medium'>
                   URL Information
                 </p>
-                <p className='mt-3 break-all text-sm text-gray-300'>
-                  URL: {result.extractedUrl}
-                </p>
-                <p className='mt-2 text-sm text-gray-300'>
-                  Domain: {result.domain}
-                </p>
-                <p className='mt-2 text-sm text-gray-300'>
-                  HTTPS: {result.https ? 'Yes':'No'}
-                </p>
+                <div className='mt-4 space-y-3 text-sm'>
+                  <div>
+                    <p className='text-gray-400'>URL</p>
+                    <p className='mt-1 break-all text-gray-200'>
+                      {result.extractedUrl}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-gray-400'>Domain</p>
+                    <p className='mt-1 text-gray-200'>
+                      {result.domain ?? 'Unable to determine'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className='text-gray-400'>HTTPS</p>
+                    <p className='mt-1 text-gray-200'>
+                      {result.https ? 'Enabled' : 'Not enabled'}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
