@@ -4,6 +4,9 @@ import com.descam.backend.detection.DetectionIndicator;
 import com.descam.backend.detection.MessageAnalysisService;
 import com.descam.backend.response.AnalyzeResponse;
 import com.descam.backend.url.UrlAnalysisService;
+import com.descam.backend.entity.Analysis;
+import com.descam.backend.repository.AnalysisRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,13 +17,16 @@ public class ScamDetectionService
 {
     private final UrlAnalysisService urlAnalysisService;
     private final MessageAnalysisService messageAnalysisService;
+    private final AnalysisRepository analysisRepository;
 
     public ScamDetectionService(
             UrlAnalysisService urlAnalysisService,
-            MessageAnalysisService messageAnalysisService)
+            MessageAnalysisService messageAnalysisService,
+            AnalysisRepository analysisRepository)
     {
         this.urlAnalysisService = urlAnalysisService;
         this.messageAnalysisService = messageAnalysisService;
+        this.analysisRepository = analysisRepository;
     }
 
     public AnalyzeResponse analyze(String message)
@@ -62,6 +68,17 @@ public class ScamDetectionService
         } else {
             riskLevel = "LOW";
         }
+
+        Analysis analysis = new Analysis();
+        analysis.setMessage(message);
+        analysis.setRiskLevel(riskLevel);
+        analysis.setScore(score);
+        analysis.setReasons(reasons);
+        analysis.setExtractedUrl(extractedUrl);
+        analysis.setDomain(domain);
+        analysis.setHttps(https);
+
+        analysisRepository.save(analysis);
 
         return new AnalyzeResponse(
                 riskLevel,

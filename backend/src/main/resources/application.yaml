@@ -3,9 +3,9 @@ spring:
     name: backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/descam
-    username: postgres
-    password: aass1122
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/descam}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
