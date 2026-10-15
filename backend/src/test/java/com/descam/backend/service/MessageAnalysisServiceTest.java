@@ -22,7 +22,7 @@ void detectsUrgentLanguage() {
 
     assertTrue(
             indicators.stream().anyMatch(
-                    indicator -> indicator.getType().equals("urgent")
+                    indicator -> indicator.getType().equals("URGENT_LANGUAGE")
             )
     );
 }
@@ -36,7 +36,7 @@ void detectsSensitiveInformationRequests() {
 
     assertTrue(
             indicators.stream().anyMatch(
-                    indicator -> indicator.getType().equals("otp")
+                    indicator -> indicator.getType().equals("SENSITIVE_INFORMATION")
             )
     );
 }
@@ -49,6 +49,64 @@ void doesNotFlagAnOrdinaryMessage() {
             );
 
     assertTrue(indicators.isEmpty());
+}
+
+@Test
+void doesNotFlagProtectiveOtpAdviceAsSensitiveRequest() {
+        List<DetectionIndicator> indicators = service.detectIndicators("Never share your OTP with anyone.");
+
+        assertFalse(indicators.stream().anyMatch(indicator -> indicator.getType().equals("SENSITIVE_INFORMATION")));
+}
+
+@Test
+void doesNotFlagPinInsideUnrelatedWords() {
+    List<DetectionIndicator> indicators =
+            service.detectIndicators(
+                    "The pinwheel is spinning in the garden."
+            );
+
+    assertFalse(
+            indicators.stream().anyMatch(
+                    indicator ->
+                            indicator.getType().equals("SENSITIVE_INFORMATION")
+            )
+    );
+}
+
+@Test
+void detectsSuspiciousAccountVerification() {
+    List<DetectionIndicator> indicators =
+            service.detectIndicators(
+                    "Please verify your account immediately."
+            );
+
+    assertTrue(
+            indicators.stream().anyMatch(
+                    indicator ->
+                            indicator.getType().equals("SUSPICIOUS_ACTION")
+            )
+    );
+}
+
+@Test
+void doesNotFlagOrdinaryBankMentionAsThreat() {
+    List<DetectionIndicator> indicators =
+            service.detectIndicators(
+                    "I visited the bank yesterday."
+            );
+
+    assertFalse(
+            indicators.stream().anyMatch(
+                    indicator ->
+                            indicator.getType().equals("BANKING_THREAT")
+            )
+    );
+}
+
+@Test
+void handlesNullAndBlankMessages() {
+    assertTrue(service.detectIndicators(null).isEmpty());
+    assertTrue(service.detectIndicators("   ").isEmpty());
 }
 
 }

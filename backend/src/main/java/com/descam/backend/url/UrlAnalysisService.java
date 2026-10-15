@@ -12,22 +12,28 @@ public class UrlAnalysisService
   public static final Pattern URL_PATTERN = Pattern.compile("https?://[^\\s]+", Pattern.CASE_INSENSITIVE);
 
   public String extractUrl(String message)
-  {
-    Matcher matcher = URL_PATTERN.matcher(message);
-    if (matcher.find())
-    {
-      String url = matcher.group();
+{
+if (message == null || message.isBlank())
+{
+return null;
+}
 
-      while (url.endsWith(".") 
-          || url.endsWith(",")
-          || url.endsWith("!")
-          || url.endsWith("?"))
-      {
-        url = url.substring(0, url.length() - 1);
-      }
-    return url;
-  }
-  return null;
+Matcher matcher = URL_PATTERN.matcher(message);
+
+if (matcher.find())
+{
+    String url = matcher.group();
+
+    while (!url.isEmpty() &&
+        ".,!?;:".indexOf(url.charAt(url.length() - 1)) >= 0)
+{
+    url = url.substring(0, url.length() - 1);
+}
+    return url.isEmpty() ? null : url;
+}
+
+return null;
+
 }
 
   public String extractDomain(String url)
