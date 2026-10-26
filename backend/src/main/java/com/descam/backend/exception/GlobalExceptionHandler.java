@@ -36,4 +36,14 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<Map<String,String>> handleDuplicateEmail(
+        DuplicateEmailException ex
+    )
+    {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of("error", ex.getMessage()));
+    }
 }
