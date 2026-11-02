@@ -4,7 +4,6 @@ import com.descam.backend.dto.RegisterRequest;
 import com.descam.backend.entity.User;
 import com.descam.backend.exception.DuplicateEmailException;
 import com.descam.backend.repository.UserRepository;
-import com.descam.backend.exception.DuplicateEmailException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
