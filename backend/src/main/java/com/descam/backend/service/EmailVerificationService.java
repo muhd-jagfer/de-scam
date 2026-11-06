@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class EmailVerificationService {
 
     private final EmailVerificationTokenRepository tokenRepository;
-    private final UserRepository userRepository;
     private final VerificationTokenService verificationTokenService;
 
     public EmailVerificationService(
@@ -22,7 +21,6 @@ public class EmailVerificationService {
             VerificationTokenService verificationTokenService) {
 
         this.tokenRepository = tokenRepository;
-        this.userRepository = userRepository;
         this.verificationTokenService = verificationTokenService;
     }
 

@@ -3,6 +3,8 @@ package com.descam.backend.controller;
 import com.descam.backend.dto.RegisterRequest;
 import com.descam.backend.service.RegistrationService;
 import com.descam.backend.service.EmailService;
+import com.descam.backend.response.EmailVerificationResponse;
+import com.descam.backend.service.EmailVerificationService;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,13 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final RegistrationService registrationService;
-    private final EmailService emailService;
+    private final EmailVerificationService emailVerificationService;
 
     public AuthController(
             RegistrationService registrationService,
-            EmailService emailService) {
+            EmailService emailService,
+            EmailVerificationService emailVerificationService) {
         this.registrationService = registrationService;
-        this.emailService = emailService;
+        this.emailVerificationService = emailVerificationService;
     }
 
     @PostMapping("/register")
@@ -33,12 +36,13 @@ public class AuthController {
                 .body("Registration successful. Please verify your email.");
     }
 
-    @PostMapping("/test-email")
-    public ResponseEntity<String> testEmail(
-            @RequestParam String recipient) {
-
-        emailService.sendTestEmail(recipient);
-
-        return ResponseEntity.ok("Test email sent successfully.");
+    @GetMapping("/verify-email")
+    public ResponseEntity<EmailVerificationResponse> VerifyEmail(
+        @RequestParam String token
+    ) {
+        emailVerificationService.verifyEmail(token);
+        return ResponseEntity.ok(
+            new EmailVerificationResponse("Email verified successfully")
+        );
     }
 }

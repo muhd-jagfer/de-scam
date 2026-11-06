@@ -2,6 +2,9 @@ spring:
   application:
     name: backend
 
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/descam}
     username: ${DB_USERNAME:postgres}
