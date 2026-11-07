@@ -2,7 +2,6 @@ package com.descam.backend.controller;
 
 import com.descam.backend.dto.RegisterRequest;
 import com.descam.backend.service.RegistrationService;
-import com.descam.backend.service.EmailService;
 import com.descam.backend.response.EmailVerificationResponse;
 import com.descam.backend.service.EmailVerificationService;
 
@@ -20,7 +19,6 @@ public class AuthController {
 
     public AuthController(
             RegistrationService registrationService,
-            EmailService emailService,
             EmailVerificationService emailVerificationService) {
         this.registrationService = registrationService;
         this.emailVerificationService = emailVerificationService;

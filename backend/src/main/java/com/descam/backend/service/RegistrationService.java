@@ -4,9 +4,11 @@ import com.descam.backend.dto.RegisterRequest;
 import com.descam.backend.entity.User;
 import com.descam.backend.repository.UserRepository;
 import com.descam.backend.exception.DuplicateEmailException;
+import com.descam.backend.event.VerificationEmailEvent;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -18,14 +20,14 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final VerificationTokenCreationService tokenCreationService;
-    private final EmailService emailService;
+    private final ApplicationEventPublisher eventPublisher;
     private final String frontendUrl;
 
     public RegistrationService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
             VerificationTokenCreationService tokenCreationService,
-            EmailService emailService,
+            ApplicationEventPublisher eventPublisher,
             @Value("${app.frontend-url}")
             String frontendUrl
             ) {
@@ -33,7 +35,7 @@ public class RegistrationService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenCreationService = tokenCreationService;
-        this.emailService = emailService;
+        this.eventPublisher = eventPublisher;
         this.frontendUrl = frontendUrl;
     }
 
@@ -63,9 +65,11 @@ public class RegistrationService {
         String verificationUrl =
                 frontendUrl + "/verify-email?token=" + token;
 
-        emailService.sendVerificationEmail(
-                savedUser.getEmail(),
-                verificationUrl
+        eventPublisher.publishEvent(
+                new VerificationEmailEvent(
+                        savedUser.getEmail(),
+                        verificationUrl
+                )
         );
     }
 }
